@@ -1,2 +1,2 @@
 # vdcmodemania-oscar64
-Remake with Oscar64 of VDC Mode Mania
+Experiments with VDC in Oscar64 based on VDC Mode Mania by Tokra.
