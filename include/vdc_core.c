@@ -81,7 +81,7 @@ struct VDCStatus vdc_state;
 unsigned multab[72];
 
 // VDC mode settings. Credits to Tokra.
-struct VDCModeSet vdc_modes[8] =
+struct VDCModeSet vdc_modes[10] =
     {
         {80, 25, 0, 8, 0, 0x0000, 0x0800, 0x1000, 0x1800, 0x2000, 0x3000, 0x4000, {VDCR_HTOTAL, 0x7f, VDCR_VTOTAL, 0x26, VDCR_VADJUST, 0xe0, VDCR_VDISPLAY, 0x19, VDCR_VSYNC, 0x20, VDCR_LACE, 0xfc, VDCR_CSIZE, 0xe7, VDCR_REFRESH, 0x7e, 255}},
         {80, 50, 0, 8, 0, 0x0000, 0x1000, 0x4000, 0x5000, 0x2000, 0x3000, 0x6000, {VDCR_HTOTAL, 0x7f, VDCR_VTOTAL, 0x4d, VDCR_VADJUST, 0x00, VDCR_VDISPLAY, 0x32, VDCR_VSYNC, 0x40, VDCR_LACE, 0x03, VDCR_CSIZE, 0x07, VDCR_REFRESH, 0x00, 255}},
@@ -90,7 +90,9 @@ struct VDCModeSet vdc_modes[8] =
         {80, 50, 0, 8, 0, 0x0000, 0x1000, 0x4000, 0x5000, 0x2000, 0x3000, 0x6000, {VDCR_HTOTAL, 0x7e, VDCR_VTOTAL, 0x41, VDCR_VADJUST, 0x00, VDCR_VDISPLAY, 0x32, VDCR_VSYNC, 0x3b, VDCR_LACE, 0x03, VDCR_CSIZE, 0x07, VDCR_REFRESH, 0x00, 255}},
         {80, 60, 0, 8, 1, 0x0000, 0x1800, 0x6000, 0x7800, 0x4000, 0x5000, 0x9000, {VDCR_HTOTAL, 0x7e, VDCR_VTOTAL, 0x41, VDCR_VADJUST, 0x00, VDCR_VDISPLAY, 0x3c, VDCR_VSYNC, 0x3d, VDCR_LACE, 0x03, VDCR_CSIZE, 0x07, VDCR_REFRESH, 0x00, 255}},
         {640, 200, 1, 8, 1, 0x0000, 0x4000, 0x4800, 0x8800, 0x9000, 0xa000, 0xb000, {VDCR_HTOTAL, 0x7f, VDCR_VTOTAL, 0x26, VDCR_VADJUST, 0xe0, VDCR_VDISPLAY, 0x19, VDCR_VSYNC, 0x20, VDCR_LACE, 0xfc, VDCR_CSIZE, 0xe7, VDCR_REFRESH, 0x7e, 255}},
-        {640, 400, 1, 8, 1, 0x0000, 0x8000, 0x9000, 0xd000, 0xe000, 0xf000, 0x0000, {VDCR_HTOTAL, 0x7f, VDCR_VTOTAL, 0x4d, VDCR_VADJUST, 0x00, VDCR_VDISPLAY, 0x32, VDCR_VSYNC, 0x40, VDCR_LACE, 0x03, VDCR_CSIZE, 0x07, VDCR_REFRESH, 0x00, 255}}};
+        {640, 200, 1, 0, 1, 0x0000, 0x4000, 0x4800, 0x8800, 0x9000, 0xa000, 0xb000, {VDCR_HTOTAL, 0x7f, VDCR_VTOTAL, 0x26, VDCR_VADJUST, 0xe0, VDCR_VDISPLAY, 0x19, VDCR_VSYNC, 0x20, VDCR_LACE, 0xfc, VDCR_CSIZE, 0xe7, VDCR_REFRESH, 0x7e, 255}},
+        {640, 400, 1, 8, 1, 0x0000, 0x8000, 0x9000, 0xd000, 0xe000, 0xf000, 0x0000, {VDCR_HTOTAL, 0x7f, VDCR_VTOTAL, 0x4d, VDCR_VADJUST, 0x00, VDCR_VDISPLAY, 0x32, VDCR_VSYNC, 0x40, VDCR_LACE, 0x03, VDCR_CSIZE, 0x07, VDCR_REFRESH, 0x00, 255}},
+        {640, 400, 1, 0, 1, 0x0000, 0x0000, 0x8000, 0x0000, 0x9000, 0xa000, 0xb000, {VDCR_HTOTAL, 0x7f, VDCR_VTOTAL, 0x4d, VDCR_VADJUST, 0x00, VDCR_VDISPLAY, 0x32, VDCR_VSYNC, 0x40, VDCR_LACE, 0x03, VDCR_CSIZE, 0x07, VDCR_REFRESH, 0x00, 255}}};
 
 char screen_width()
 // Return screenwidth 40 or 80
@@ -239,8 +241,8 @@ char vdc_set_mode(char mode)
     if (vdc_state.bitmap)
     {
         index |= VDC_BITMAP;
-        vdc_state.charwidth = vdc_state.width/8;
-        vdc_state.charheight = vdc_state.height/8;
+        vdc_state.charwidth = vdc_state.width / 8;
+        vdc_state.charheight = vdc_state.height / 8;
     }
     else
     {
@@ -255,6 +257,7 @@ char vdc_set_mode(char mode)
     {
         index &= ~VDC_ATTRB;
     }
+
     vdc_reg_write(VDCR_HSCROLL, index);
 
     if (!vdc_state.bitmap)
@@ -579,6 +582,22 @@ void vdc_cls()
 // Function to clear VDC screen with given value and attribute
 {
     vdc_clear(0, 0, C_SPACE, vdc_state.width, vdc_state.height);
+}
+
+void vdc_hires_colorarea(char xc, char yc, char xw, char yw, char fg, char bg)
+{
+    unsigned address;
+    char charwidth = vdc_state.width / 8;
+    char y;
+    char color = bg + (16 * fg);
+
+    address = vdc_state.base_attr + (yc * charwidth) + xc;
+
+    for (y = 0; y < yw; y++)
+    {
+        vdc_block_fill(address, color, xw);
+        address += charwidth;
+    }
 }
 
 static __native inline void vdc_wait_vblank()

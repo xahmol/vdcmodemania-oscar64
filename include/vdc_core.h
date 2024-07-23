@@ -138,6 +138,7 @@ void vdc_hchar(unsigned x, unsigned y, char val, char attr, char length);
 void vdc_vchar(unsigned x, unsigned y, char val, char attr, char length);
 void vdc_clear(unsigned x, unsigned y, char val, char length, unsigned lines);
 void vdc_cls();
+void vdc_hires_colorarea(char xc, char yc, char xw, char yw, char fg, char bg);
 void vdc_wait_vblank();
 void vdc_wait_no_vblank();
 void vdc_pass_vblank();
@@ -152,7 +153,9 @@ enum VDCMode
     VDC_TEXT_80x50_NTSC,
     VDC_TEXT_80x60_NTSC,
     VDC_HIRES_640x200_Color_PAL,
-    VDC_HIRES_640x400_Color_PAL
+    VDC_HIRES_640x200_Mono_PAL,
+    VDC_HIRES_640x400_Color_PAL,
+    VDC_HIRES_640x400_Mono_PAL
 };
 struct VDCModeSet
 {
@@ -170,7 +173,7 @@ struct VDCModeSet
     unsigned extended;
     char regset[17];
 };
-extern struct VDCModeSet vdc_modes[8];
+extern struct VDCModeSet vdc_modes[10];
 struct VDCStatus
 {
     char memsize;

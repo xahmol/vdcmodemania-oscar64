@@ -72,8 +72,7 @@ THE PROGRAMS ARE DISTRIBUTED IN THE HOPE THAT THEY WILL BE USEFUL, BUT WITHOUT A
 // Memory map bank 1
 #define MEM_SID 0x2000
 #define MEM_SCREEN 0x4000
-#define MEM_CHARSET 0xA000
-#define MEM_WINDOW 0xA800
+#define MEM_CHARSET 0xC000
 
 // References to steering chars
 #define CH_CURS_UP 145    // Petscii control code for Cursor Up

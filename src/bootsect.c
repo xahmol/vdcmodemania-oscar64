@@ -1,5 +1,5 @@
 /*
-Oscar64 VDC Demo
+VDC Experience
 
 Testing and demonstrating my C128 VDC functions for the Oscar64 C compiller
 
@@ -94,7 +94,7 @@ THE PROGRAMS ARE DISTRIBUTED IN THE HOPE THAT THEY WILL BE USEFUL, BUT WITHOUT A
 #pragma region( main, 0x0bff, 0x0c00, , , {code, bss, heap, data})
 #pragma heapsize(0)
 
-#define executable "vdctest"
+#define executable "vdcexp"
 
 __export char pad[1] = {0};
 

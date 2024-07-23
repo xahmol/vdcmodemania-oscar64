@@ -48,20 +48,20 @@ void raster_synch()
     __asm 
     {
         sei
-        lda #$20
         ldx #$7F
         stx $dd0d
-        ldx #62
+        ldx #63
         stx $dd04
         ldx #$FF
         stx $dd06
         lda #$00
         sta $dd05
         sta $dd07
+        lda #$20
     rs_wait1:
         bit $d600
         bne rs_wait1
-        ldx #9
+        ldx #7
         nop
     rs_wait2:
         dex

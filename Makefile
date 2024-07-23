@@ -22,9 +22,8 @@ endif
 CC = /home/xahmol/oscar64/bin/oscar64
 
 # Application names
-MAIN = vdcmania
-PLASMA = color2plasma
-ROTATE = rotscreen
+MAIN = vdcexp
+LMC = vdcelmc
 
 # Build versioning
 VERSION_MAJOR = 0
@@ -40,50 +39,45 @@ FLOSSIECFLAGS = -dFLOSSIEC -dFLOSSIEC_BORDER=1 -dFLOSSIEC_NODISPLAY=1 -dFLOSSIEC
 
 # Sources
 MAINSRC = src/main.c
-PLASMASRC = src/color2plasma.c
-ROTATESRC = src/rotscreen.c
 
 # Hostname of Ultimate II+ target for deployment. Edit for proper IP and usb number
 ULTHOST = ftp://192.168.1.19/usb1/temp/
 ULTHOST2 = ftp://192.168.1.31/usb1/temp/
 
 # ZIP file contents
-ZIP = oscar64_vdcdemo_$(VERSION).zip
+ZIP = $(MAIN)_$(VERSION).zip
 README = README.pdf
 ZIPLIST = build/flossiec/*.* build/krill/*.* build/standard/*.* $(README)
-PRGLIST = -write vdctest.prg vdctest -write vdctestlmc.prg vdctestlmc
+PRGLIST = -write $(MAIN).prg $(MAIN) -write $(LMC).prg $(LMC)
 KRILLLIST = -write install-c128.prg install-c128 -write loader-c128.prg loader-c128 
-ASSETS = -write screen1.prg screen1 -write screen2.prg screen2 -write screen3.prg screen3 -write music1.prg music1 -write music2.prg music2 -write chars1.prg chars1 -write chars2.prg chars2
+ASSETS = -write vdce-scrtit.top vdce-scrtit.top -write vdce-scrtit.bot vdce-scrtit.bot
 
 ########################################
 
 .SUFFIXES:
 .PHONY: all clean deploy vice
-all: $(PLASMA).prg d81
+all: $(MAIN).prg bootsect.bin d81
 #all: $(MAIN).prg bootsect.bin loader-c128.prg d64 d71 d81 $(ZIP)
 
-$(PLASMA).prg: $(PLASMASRC)
-	$(CC) $(CFLAGS) -n -o=build/$(PLASMA).prg $<
-
-#$(MAIN).prg: $(MAINSRC)
+$(MAIN).prg: $(MAINSRC)
 #	$(CC) $(CFLAGS) $(FLOSSIECFLAGS) -n -o=build/flossiec/$(MAIN).prg $<
 #	$(CC) $(CFLAGS) -dKRILL -n -o=build/krill/$(MAIN).prg $<
-#	$(CC) $(CFLAGS) -n -o=build/standard/$(MAIN).prg $<
-#
-#bootsect.bin: $(MAIN).prg
-#	$(CC) -tf=bin -rt=src/bootsect.c -o=build/standard/bootsect.bin
+	$(CC) $(CFLAGS) -n -o=build/standard/$(MAIN).prg $<
+
+bootsect.bin: $(MAIN).prg
+	$(CC) -tf=bin -rt=src/bootsect.c -o=build/standard/bootsect.bin
 #	cp build/standard/bootsect.bin build/krill
 #	cp build/standard/bootsect.bin build/flossiec
-#	cp assets/screen*.prg build/standard
+	cp assets/vdce-scr*.* build/standard
 #	cp assets/music*.prg build/standard
 #	cp assets/chars*.prg build/standard
-#	cp assets/screen*.prg build/krill
+#	cp assets/vdce-scr*.prg build/krill
 #	cp assets/music*.prg build/krill
 #	cp assets/chars*.prg build/krill
-#	cp assets/screen*.prg build/flossiec
+#	cp assets/vdce-scr*.prg build/flossiec
 #	cp assets/music*.prg build/flossiec
 #	cp assets/chars*.prg build/flossiec
-#
+
 #loader-c128.prg:
 #	cd krill/loader/; $(DEL) build/*.* 2>$(NULLDEV)
 #	cd krill/loader/; make PLATFORM=c128 prg INSTALL=A000 RESIDENT=0b00 ZP=f5 PROJECT=
@@ -122,36 +116,36 @@ $(PLASMA).prg: $(PLASMASRC)
 #	c1541 -cd build/standard -attach $(MAIN)-stnd.d71 $(PRGLIST) $(ASSETS)
 #
 d81:
-	c1541 -cd build -format "$(PLASMA),xm" d81 $(PLASMA).d81
-	c1541 -cd build -attach $(PLASMA).d81 -write $(PLASMA).prg $(PLASMA) -write vdctestlmc.prg vdctestlmc
+#	c1541 -cd build -attach $(PLASMA).d81 -write $(PLASMA).prg $(PLASMA) -write vdctestlmc.prg vdctestlmc
 #	c1541 -cd build/krill -format "$(MAIN),xm" d81 $(MAIN)-krill.d81
 #	c1541 -cd build/krill -attach $(MAIN)-krill.d81 -bwrite bootsect.bin 1 0
 #	c1541 -cd build/krill -attach $(MAIN)-krill.d81 -bpoke 40 1 16 $27 %11111110
 #	c1541 -cd build/krill -attach $(MAIN)-krill.d81 -bam 1 1
 #	c1541 -cd build/krill -attach $(MAIN)-krill.d81 $(PRGLIST) $(KRILLLIST) $(ASSETS)
-#	c1541 -cd build/standard -format "$(MAIN),xm" d81 $(MAIN)-stnd.d81
-#	c1541 -cd build/standard -attach $(MAIN)-stnd.d81 -bwrite bootsect.bin 1 0
-#	c1541 -cd build/standard -attach $(MAIN)-stnd.d81 -bpoke 40 1 16 $27 %11111110
-#	c1541 -cd build/standard -attach $(MAIN)-stnd.d81 -bam 1 1
-#	c1541 -cd build/standard -attach $(MAIN)-stnd.d81 $(PRGLIST) $(ASSETS)
-#
+	c1541 -cd build/standard -format "$(MAIN),xm" d81 $(MAIN)-stnd.d81
+	c1541 -cd build/standard -attach $(MAIN)-stnd.d81 -bwrite bootsect.bin 1 0
+	c1541 -cd build/standard -attach $(MAIN)-stnd.d81 -bpoke 40 1 16 $27 %11111110
+	c1541 -cd build/standard -attach $(MAIN)-stnd.d81 -bam 1 1
+	c1541 -cd build/standard -attach $(MAIN)-stnd.d81 $(PRGLIST) $(ASSETS)
+
 ## Creating ZIP file for distribution
 #$(ZIP):
 #	zip -j $(ZIP) build/flossiec/*.d* build/krill/*.d* build/standard/*.d* $(README)
 #
-## Cleaning repo of build files
-#clean:
+# Cleaning repo of build files
+clean:
+	$(DEL) build/*.* 2>$(NULLDEV)
 #	$(DEL) build/krill/*.* 2>$(NULLDEV)
 #	$(DEL) build/flossiec/*.* 2>$(NULLDEV)
-#	$(DEL) build/standard/*.* 2>$(NULLDEV)
+	$(DEL) build/standard/*.* 2>$(NULLDEV)
 #	$(DEL) krill/loader/build/*.* 2>$(NULLDEV)
-#
-## To deploy software to UII+ enter make deploy. Obviously C128 needs to powered on with UII+ and USB drive connected.
+
+# To deploy software to UII+ enter make deploy. Obviously C128 needs to powered on with UII+ and USB drive connected.
 deploy:
-	wput -u build/*.d* $(ULTHOST)
+	wput -u build/standard/*.prg build/standard/$(MAIN)-stnd.d* $(ULTHOST)
 #	wput -u build/standard/*.prg build/standard/$(MAIN)-stnd.d* build/flossiec/$(MAIN)-fl.d* build/krill/$(MAIN)-krill.d* $(ULTHOST)
 ##	wput -u build/standard/*.prg build/standard/$(MAIN).d* build/flossiec/$(MAIN).d* build/krill/$(MAIN).d*  $(ULTHOST2)
-#
+
 ## To run software using VICE x128
-#vice: $(MAIN).d64 $(MAIN).d71 $(MAIN).d81
-#	x128 build/flossiec/$(MAIN).d81
+vice: $(MAIN).d81
+	x128 build/standard/$(MAIN).d81
